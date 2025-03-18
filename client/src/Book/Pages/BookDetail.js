@@ -2,7 +2,12 @@ import React, { useEffect, useState, useContext } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useParams } from "react-router-dom";
-import { getBookById, getReview, postreview } from "../Core/_request";
+import {
+  deleteReview,
+  getBookById,
+  getReview,
+  postreview,
+} from "../Core/_request";
 import { UserContext } from "../../context/UserContext";
 import Navbar from "../Components/Navbar";
 
@@ -25,6 +30,16 @@ export default function BookDetail() {
   useEffect(() => {
     getBookDetail();
   }, []);
+
+  const deleteComment = async (id) => {
+    try {
+      const res = await deleteReview(id);
+      console.log("del comment:", res);
+      getBookReviews();
+    } catch (error) {
+      console.error("Error deleting the Reviews", error);
+    }
+  };
 
   const getBookReviews = async () => {
     try {
@@ -196,6 +211,12 @@ export default function BookDetail() {
                     <div className="d-flex align-items-center">
                       {renderStars(r.rating)}
                       <p className="ms-8">@{r.user}</p>
+                      <button
+                        className="ms-8"
+                        onClick={() => deleteComment(r._id)}
+                      >
+                        <i class="bi bi-trash"></i>
+                      </button>
                     </div>
                     <p className="ms-4 mt-2 text-start">{r.comment}</p>
                   </div>
