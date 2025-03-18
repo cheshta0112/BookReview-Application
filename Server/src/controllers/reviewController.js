@@ -22,3 +22,18 @@ exports.submitReview = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
+exports.deleteReview = async (req, res) => {
+  try {
+    const { reviewId } = req.params;
+    const review = await Review.findByIdAndDelete(reviewId);
+
+    if (!review) {
+      return res.status(404).json({ message: "Review not found" });
+    }
+
+    res.json({ message: "Review deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
